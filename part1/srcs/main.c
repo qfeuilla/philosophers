@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 14:28:03 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 14:39:40 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,6 +65,8 @@ t_philosopher	*creat_philo(t_philosopher *prev, int i, int eat_num)
 	philo->time_to_die = g_time_to_die;
 	philo->num = ft_itoa(i + 1);
 	philo->alive = 1;
+	philo->is_thinking = 0;
+	philo->fork_in_hand = 0;
 	pthread_mutex_init(&philo->mutex, NULL);
 	philo->prev = prev;
 	philo->next = NULL;
