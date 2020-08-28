@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:00:40 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 13:24:03 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 14:31:16 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	ft_memmove(strj, s1, len1);
 	ft_memmove(strj + len1, s2, len2);
 	strj[len1 + len2] = '\0';
+	free((char *)s1);
 	return (strj);
 }
 

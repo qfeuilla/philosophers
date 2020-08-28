@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 13:52:28 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 14:28:03 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,21 +73,21 @@ t_philosopher	*creat_philo(t_philosopher *prev, int i, int eat_num)
 	return (philo);
 }
 
-t_philosopher	*init_util(int ac, char **av, int i, int max)
+t_philosopher	*init_util(int ac, char **av, int i)
 {
 	int				bool;
 	t_philosopher	*phis;
 	t_philosopher	*tmp;
 
 	bool = 0;
-	if (ac == max + 5)
+	if (ac == g_phi_number + 5)
 		bool = 1;
 	if (bool)
 		phis = creat_philo(NULL, i, ft_atoi(av[i + 5]));
 	else
 		phis = creat_philo(NULL, i, -1);
 	tmp = phis;
-	while (++i < max)
+	while (++i < g_phi_number)
 	{
 		if (bool)
 			tmp = creat_philo(tmp, i, ft_atoi(av[i + 5]));
@@ -103,13 +103,13 @@ t_philosopher	*init_phis(char **av, int ac)
 {
 	int				max;
 
-	if (ac < 4)
+	if (ac <= 4)
 	{
 		g_error = -1;
 		return (NULL);
 	}
-	max = ft_atoi(av[1]);
-	if (max < 1)
+	g_phi_number = ft_atoi(av[1]);
+	if (g_phi_number < 1)
 		return (NULL);
 	g_time_to_die = ft_atoi(av[2]);
 	g_time_to_eat = ft_atoi(av[3]);
@@ -119,7 +119,7 @@ t_philosopher	*init_phis(char **av, int ac)
 		write(1, "0 1 died\n", 9);
 		return (NULL);
 	}
-	return (init_util(ac, av, 0, max));
+	return (init_util(ac, av, 0));
 }
 
 int				manage_errors()
