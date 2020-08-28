@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 13:49:24 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 14:38:59 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,9 +18,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
-# include <errno.h>
 # include "philo_errors.h"
-
 # ifndef DEBUG
 #  define DEBUG 0
 # endif
@@ -31,6 +29,8 @@ typedef struct				s_philosopher
 	int						eat_num;
 	char 					*num;
 	int						alive;
+	int						is_thinking;
+	int						fork_in_hand;
 
 	pthread_t				thread;
 	pthread_mutex_t			mutex;
@@ -56,5 +56,6 @@ int							g_time_to_sleep;
 int							g_time_to_eat;
 int							g_time_stamp;
 int							g_error;
+int							g_phi_number;
 
 #endif

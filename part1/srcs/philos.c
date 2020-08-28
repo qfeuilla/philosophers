@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 14:43:32 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 14:45:56 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ void						rspleep(t_philosopher *philo)
 	tmp_s = ft_strjoin(tmp_s, " is sleeping\n");
 	write(1, tmp_s, ft_strlen(tmp_s));
 	free(tmp_s);
-	usleep(g_time_to_sleep);
+	usleep(g_time_to_sleep * 1000);
 }
 
 void						rthink(t_philosopher *philo)
@@ -77,7 +77,8 @@ int							reat(t_philosopher *philo)
 		tmp_s = ft_strjoin(tmp_s, " is eating\n");
 		write(1, tmp_s, ft_strlen(tmp_s));
 		free(tmp_s);
-		usleep(g_time_to_eat);
+		usleep(g_time_to_eat * 1000);
+		philo->time_to_die = g_time_to_die;
 		philo->fork_in_hand = 0;
 		return (1);
 	}
