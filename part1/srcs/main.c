@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 12:54:12 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 13:52:28 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ void			loop(t_philosopher **philos)
 	t_philosopher	*tmp;
 	char			*tmp_s;
 
-	init_threads(philos);
+	if (init_threads(philos))
+		return ;
 	while (1)
 	{
 		g_time_stamp++;
@@ -102,6 +103,11 @@ t_philosopher	*init_phis(char **av, int ac)
 {
 	int				max;
 
+	if (ac < 4)
+	{
+		g_error = -1;
+		return (NULL);
+	}
 	max = ft_atoi(av[1]);
 	if (max < 1)
 		return (NULL);
@@ -116,15 +122,31 @@ t_philosopher	*init_phis(char **av, int ac)
 	return (init_util(ac, av, 0, max));
 }
 
+int				manage_errors()
+{
+	if (g_error == EINVAL)
+		write(2, MS_EINVAL, ft_strlen(MS_EINVAL));
+	if (g_error == EFAULT)
+		write(2, MS_EFAULT, ft_strlen(MS_EFAULT));
+	if (g_error == EAGAIN)
+		write(2, MS_EAGAIN, ft_strlen(MS_EAGAIN));
+	if (g_error == -1)
+		write(2, MS_ARG, ft_strlen(MS_ARG));
+	return (1);
+}
+
 int				main(int ac, char **av)
 {
 	t_philosopher *philos;
 
+	g_error = 0;
 	philos = init_phis(av, ac);
 	if (philos)
 	{
 		loop(&philos);
 		free_all(&philos);
 	}
+	if (g_error)
+		return (manage_errors());
 	return (0);
 }

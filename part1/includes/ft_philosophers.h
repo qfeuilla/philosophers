@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 13:00:31 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 13:49:24 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,9 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <stdio.h>
+# include <errno.h>
+# include "philo_errors.h"
+
 # ifndef DEBUG
 #  define DEBUG 0
 # endif
@@ -46,10 +49,12 @@ void						rspleep(t_philosopher *philo);
 void						rthink(t_philosopher *philo);
 int							reat(t_philosopher *philo);
 void						free_all(t_philosopher **phi);
-void						init_threads(t_philosopher **philos);
+int							init_threads(t_philosopher **philos);
 
 int							g_time_to_die;
 int							g_time_to_sleep;
 int							g_time_to_eat;
 int							g_time_stamp;
+int							g_error;
+
 #endif
