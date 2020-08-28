@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 14:39:40 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/28 14:58:46 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,12 +16,15 @@ void			loop(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
 	char			*tmp_s;
+	struct timeval	time;
+	struct timeval	time2;
 
 	if (init_threads(philos))
 		return ;
 	while (1)
 	{
 		g_time_stamp++;
+		gettimeofday(&time, NULL);
 		tmp = (*philos)->next;
 		--(*philos)->time_to_die;
 		if ((*philos)->time_to_die == 0)
@@ -51,7 +54,8 @@ void			loop(t_philosopher **philos)
 				break ;
 			tmp = tmp->next;
 		}
-		usleep(950);
+		gettimeofday(&time2, NULL);
+		usleep(1000 - ());
 	}
 }
 
