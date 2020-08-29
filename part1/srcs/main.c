@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/29 11:08:12 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 12:39:56 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,18 +28,15 @@ void			loop(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
 	char			*tmp_s;
-	struct timeval	time;
-	struct timeval	time2;
 
 	if (init_threads(philos))
 		return ;
 	while (1)
 	{
-		gettimeofday(&time, NULL);
-		g_time_stamp++;
+		g_time_stamp++; 
 		tmp = (*philos)->next;
 		--(*philos)->time_to_die;
-		if ((*philos)->time_to_die == 0)
+		if ((*philos)->alive == 0)
 		{
 			tmp_s = ft_strjoin(ft_itoa(g_time_stamp), " ");
 			tmp_s = ft_strjoin(tmp_s, (*philos)->num);
@@ -53,7 +50,7 @@ void			loop(t_philosopher **philos)
 		while (tmp != *philos)
 		{
 			--tmp->time_to_die;
-			if (tmp->time_to_die == 0)
+			if (tmp->alive == 0)
 			{
 				tmp_s = ft_strjoin(ft_itoa(g_time_stamp), " ");
 				tmp_s = ft_strjoin(tmp_s, tmp->num);
@@ -66,8 +63,7 @@ void			loop(t_philosopher **philos)
 				break ;
 			tmp = tmp->next;
 		}
-		gettimeofday(&time2, NULL);
-		usleep(1000 * TIMESCALE - timediff(time, time2));
+		usleep(1000 * TIMESCALE);
 	}
 }
 

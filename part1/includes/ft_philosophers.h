@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/29 00:08:41 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 11:37:16 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,7 +52,8 @@ int							ft_atoi(const char *str);
 void 						*philo_life(void *philo_cpy);
 void						rspleep(t_philosopher *philo);
 void						rthink(t_philosopher *philo);
-int							reat(t_philosopher *philo);
+void						reat(t_philosopher *philo);
+void						rdeath(t_philosopher *philo);
 void						free_all(t_philosopher **phi);
 int							init_threads(t_philosopher **philos);
 
