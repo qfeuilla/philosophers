@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/29 12:56:58 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 22:31:43 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,24 +16,30 @@ void 						*philo_life(void *philo_cpy)
 {
 	t_philosopher	*philo;
 	int				i;
+	int				time;
 
 	i = 0;
 	philo = (t_philosopher *)philo_cpy;
-	while (philo->alive)
+	while (1)
+		if (g_start)
+			break;
+	while (philo->alive && !g_stop)
 	{
-		if (philo->actual_action == 1 || philo->actual_action == 0)
+		time = g_time_stamp;
+		if ((philo->actual_action == 1 || philo->actual_action == 0) && !g_stop)
 			reat(philo);
-		if (philo->actual_action == 2 && g_time_stamp >= philo->next_step)
+		if (philo->actual_action == 2 && time >= philo->next_step && !g_stop)
 			rspleep(philo);
-		if (philo->actual_action == 3 && g_time_stamp >= philo->next_step)
+		if (philo->actual_action == 3 && time >= philo->next_step && !g_stop)
 			rthink(philo);
-		if (philo->actual_action == 1 || philo->actual_action == 0)
+		if ((philo->actual_action == 1 || philo->actual_action == 0) && !g_stop)
 			reat(philo);
-		if (philo->actual_action == 2 && g_time_stamp >= philo->next_step)
+		if (philo->actual_action == 2 && time >= philo->next_step && !g_stop)
 			rspleep(philo);
-		if (philo->actual_action == 3 && g_time_stamp >= philo->next_step)
+		if (philo->actual_action == 3 && time >= philo->next_step && !g_stop)
 			rthink(philo);
-		rdeath(philo);
+		if (!g_stop)
+			rdeath(philo);
 	}
 }
 
@@ -43,7 +49,9 @@ void						rspleep(t_philosopher *philo)
 	int		time;
 
 	time = g_time_stamp;
-	philo->fork_in_hand = 0;
+	if (g_phi_number > 1)
+		pthread_mutex_unlock(&philo->mutex);
+	philo->mutex_is_lock = 0;
 	tmp_s = ft_strjoin(ft_itoa(philo->next_step), " ");
 	tmp_s = ft_strjoin(tmp_s, philo->num);
 	tmp_s = ft_strjoin(tmp_s, " is sleeping\n");
@@ -71,23 +79,21 @@ void						reat(t_philosopher *philo)
 	int		time;
 
 	time = g_time_stamp;
-	if (g_phi_number == 1)
+	if (g_phi_number == 1 || (philo->prev && !(philo->prev->mutex_is_lock)))
 	{
+		philo->mutex_is_lock = 1;
+		if (g_phi_number > 1)
+			pthread_mutex_lock(&(philo->mutex));
 		tmp_s = ft_strjoin(ft_itoa(time), " ");
 		tmp_s = ft_strjoin(tmp_s, philo->num);
 		tmp_s = ft_strjoin(tmp_s, " has taken a fork\n");
 		write(1, tmp_s, ft_strlen(tmp_s));
 		free(tmp_s);
-		philo->fork_in_hand++;
 		tmp_s = ft_strjoin(ft_itoa(time), " ");
 		tmp_s = ft_strjoin(tmp_s, philo->num);
 		tmp_s = ft_strjoin(tmp_s, " has taken a fork\n");
 		write(1, tmp_s, ft_strlen(tmp_s));
 		free(tmp_s);
-		philo->fork_in_hand++;
-	}
-	if (philo->fork_in_hand == 2)
-	{
 		philo->time_to_die = g_time_to_die;
 		tmp_s = ft_strjoin(ft_itoa(time), " ");
 		tmp_s = ft_strjoin(tmp_s, philo->num);
@@ -95,7 +101,7 @@ void						reat(t_philosopher *philo)
 		write(1, tmp_s, ft_strlen(tmp_s));
 		free(tmp_s);
 		philo->actual_action = 2;
-		philo->next_step = time + g_time_to_eat - (time - philo->next_step);
+		philo->next_step = time + g_time_to_eat;
 	}
 }
 
@@ -105,9 +111,28 @@ void						rdeath(t_philosopher *philo)
 		philo->alive = 0;
 }
 
-void						free_all(t_philosopher **phi)
+void						free_all(t_philosopher **philos)
 {
-	
+	t_philosopher	*tmp;
+	t_philosopher	*nav;
+	int				already;
+
+	nav = *philos;
+	already = 0;
+	while (!already || (ft_atoi(nav->num) != 1))
+	{
+		tmp = nav;
+		nav = nav->next;
+		if (ft_atoi(tmp->num) == 1)
+			already = 1;
+		else
+		{
+			free(tmp->num);
+			free(tmp);
+		}
+	}
+	free(nav->num);
+	free(nav);
 }
 
 int							init_threads(t_philosopher **philos)
@@ -119,7 +144,6 @@ int							init_threads(t_philosopher **philos)
 	already = 0;
 	while (!already || (ft_atoi(tmp->num) != 1))
 	{
-		printf("%s\n", tmp->num);
 		if ((g_error = pthread_create(&(tmp->thread), NULL, philo_life, tmp)))
 			return (1);
 		if (ft_atoi(tmp->num) == 1)

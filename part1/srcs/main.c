@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/29 12:39:56 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 22:32:39 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,12 +28,15 @@ void			loop(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
 	char			*tmp_s;
+	struct timeval	time1;
+	struct timeval	time2;
 
 	if (init_threads(philos))
 		return ;
-	while (1)
+	g_start = 1;
+	while (!g_stop)
 	{
-		g_time_stamp++; 
+		gettimeofday(&time1, NULL);
 		tmp = (*philos)->next;
 		--(*philos)->time_to_die;
 		if ((*philos)->alive == 0)
@@ -43,6 +46,7 @@ void			loop(t_philosopher **philos)
 			tmp_s = ft_strjoin(tmp_s, " died\n");
 			write(1, tmp_s, ft_strlen(tmp_s));
 			free(tmp_s);
+			g_stop = 1;
 			break ;
 		}
 		if ((*philos)->eat_num == 0)
@@ -57,13 +61,16 @@ void			loop(t_philosopher **philos)
 				tmp_s = ft_strjoin(tmp_s, " died\n");
 				write(1, tmp_s, ft_strlen(tmp_s));
 				free(tmp_s);
+				g_stop = 1;
 				break ;
 			}
 			if (tmp->eat_num == 0)
 				break ;
 			tmp = tmp->next;
 		}
-		usleep(1000 * TIMESCALE);
+		gettimeofday(&time2, NULL);
+		usleep(1000 * TIMESCALE - timediff(time1, time2));
+		g_time_stamp++; 
 	}
 }
 
@@ -77,9 +84,9 @@ t_philosopher	*creat_philo(t_philosopher *prev, int i, int eat_num)
 	philo->time_to_die = g_time_to_die;
 	philo->num = ft_itoa(i + 1);
 	philo->alive = 1;
-	philo->fork_in_hand = 0;
 	philo->actual_action = 0;
 	philo->next_step = 0;
+	philo->mutex_is_lock = 0;
 	pthread_mutex_init(&philo->mutex, NULL);
 	philo->prev = prev;
 	philo->next = NULL;
@@ -154,7 +161,9 @@ int				main(int ac, char **av)
 {
 	t_philosopher *philos;
 
-	g_time_stamp = -1;
+	g_start = 0;
+	g_stop = 0;
+	g_time_stamp = 0;
 	g_error = 0;
 	philos = init_phis(av, ac);
 	if (philos)

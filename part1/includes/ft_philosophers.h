@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/29 11:37:16 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 21:43:00 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,13 +29,9 @@ typedef struct				s_philosopher
 	int						eat_num;
 	char 					*num;
 	int						alive;
-	int						fork_in_hand;
 	int						actual_action;
-	// 0: start state
-	// 1: thinking
-	// 2: eating
-	// 3: sleeping
 	int						next_step;
+	int						mutex_is_lock;
 
 	pthread_t				thread;
 	pthread_mutex_t			mutex;
@@ -63,5 +59,7 @@ int							g_time_to_eat;
 int							g_time_stamp;
 int							g_error;
 int							g_phi_number;
+int							g_start;
+int							g_stop;
 
 #endif
