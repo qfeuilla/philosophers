@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 14:45:56 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 11:22:16 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,9 +19,11 @@ void 						*philo_life(void *philo_cpy)
 	philo = (t_philosopher *)philo_cpy;
 	while (1)
 	{
-		if (reat(philo))
+		if (philo->actual_action == 1 || philo->actual_action == 0)
+			reat(philo);
+		if (philo->actual_action == 2 && g_time_stamp >= philo->next_step)
 			rspleep(philo);
-		else if (!philo->is_thinking)
+		if (philo->actual_action == 3 && g_time_stamp >= philo->next_step)
 			rthink(philo);
 	}
 }
@@ -29,40 +31,46 @@ void 						*philo_life(void *philo_cpy)
 void						rspleep(t_philosopher *philo)
 {
 	char	*tmp_s;
+	int		time;
 
-	tmp_s = ft_strjoin(ft_itoa(g_time_stamp), " ");
+	time = g_time_stamp;
+	philo->fork_in_hand = 0;
+	tmp_s = ft_strjoin(ft_itoa(philo->next_step), " ");
 	tmp_s = ft_strjoin(tmp_s, philo->num);
 	tmp_s = ft_strjoin(tmp_s, " is sleeping\n");
 	write(1, tmp_s, ft_strlen(tmp_s));
 	free(tmp_s);
-	usleep(g_time_to_sleep * 1000);
+	philo->actual_action = 3;
+	philo->next_step = time + g_time_to_sleep - (time - philo->next_step);
 }
 
 void						rthink(t_philosopher *philo)
 {
 	char	*tmp_s;
 
-	philo->is_thinking= 1;
-	tmp_s = ft_strjoin(ft_itoa(g_time_stamp), " ");
+	tmp_s = ft_strjoin(ft_itoa(philo->next_step), " ");
 	tmp_s = ft_strjoin(tmp_s, philo->num);
 	tmp_s = ft_strjoin(tmp_s, " is thinking\n");
 	write(1, tmp_s, ft_strlen(tmp_s));
 	free(tmp_s);
+	philo->actual_action = 1;
 }
 
 int							reat(t_philosopher *philo)
 {
 	char	*tmp_s;
-	
+	int		time;
+
+	time = g_time_stamp;
 	if (g_phi_number == 1)
 	{
-		tmp_s = ft_strjoin(ft_itoa(g_time_stamp), " ");
+		tmp_s = ft_strjoin(ft_itoa(time), " ");
 		tmp_s = ft_strjoin(tmp_s, philo->num);
 		tmp_s = ft_strjoin(tmp_s, " has taken a fork\n");
 		write(1, tmp_s, ft_strlen(tmp_s));
 		free(tmp_s);
 		philo->fork_in_hand++;
-		tmp_s = ft_strjoin(ft_itoa(g_time_stamp), " ");
+		tmp_s = ft_strjoin(ft_itoa(time), " ");
 		tmp_s = ft_strjoin(tmp_s, philo->num);
 		tmp_s = ft_strjoin(tmp_s, " has taken a fork\n");
 		write(1, tmp_s, ft_strlen(tmp_s));
@@ -71,19 +79,15 @@ int							reat(t_philosopher *philo)
 	}
 	if (philo->fork_in_hand == 2)
 	{
-		philo->is_thinking = 0;
-		tmp_s = ft_strjoin(ft_itoa(g_time_stamp), " ");
+		philo->time_to_die = g_time_to_die;
+		tmp_s = ft_strjoin(ft_itoa(time), " ");
 		tmp_s = ft_strjoin(tmp_s, philo->num);
 		tmp_s = ft_strjoin(tmp_s, " is eating\n");
 		write(1, tmp_s, ft_strlen(tmp_s));
 		free(tmp_s);
-		usleep(g_time_to_eat * 1000);
-		philo->time_to_die = g_time_to_die;
-		philo->fork_in_hand = 0;
-		return (1);
+		philo->actual_action = 2;
+		philo->next_step = time + g_time_to_eat - (time - philo->next_step);
 	}
-	else
-		return (0);
 	// return 1 if manage to eat else 0
 }
 

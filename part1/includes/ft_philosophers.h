@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 14:38:59 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 00:08:41 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,13 @@ typedef struct				s_philosopher
 	int						eat_num;
 	char 					*num;
 	int						alive;
-	int						is_thinking;
 	int						fork_in_hand;
+	int						actual_action;
+	// 0: start state
+	// 1: thinking
+	// 2: eating
+	// 3: sleeping
+	int						next_step;
 
 	pthread_t				thread;
 	pthread_mutex_t			mutex;
