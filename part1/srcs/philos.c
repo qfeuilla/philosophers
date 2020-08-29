@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/29 12:43:42 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/29 12:56:58 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,11 +14,19 @@
 
 void 						*philo_life(void *philo_cpy)
 {
-	t_philosopher *philo;
-	
+	t_philosopher	*philo;
+	int				i;
+
+	i = 0;
 	philo = (t_philosopher *)philo_cpy;
 	while (philo->alive)
 	{
+		if (philo->actual_action == 1 || philo->actual_action == 0)
+			reat(philo);
+		if (philo->actual_action == 2 && g_time_stamp >= philo->next_step)
+			rspleep(philo);
+		if (philo->actual_action == 3 && g_time_stamp >= philo->next_step)
+			rthink(philo);
 		if (philo->actual_action == 1 || philo->actual_action == 0)
 			reat(philo);
 		if (philo->actual_action == 2 && g_time_stamp >= philo->next_step)
