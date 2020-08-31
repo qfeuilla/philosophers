@@ -6,11 +6,11 @@
 #    By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/30 19:27:07 by qfeuilla          #+#    #+#              #
-#    Updated: 2020/08/31 16:39:08 by qfeuilla         ###   ########.fr        #
+#    Updated: 2020/08/31 11:41:35 by qfeuilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
-NAME = philo_two
+NAME = philo_three
 
 SRCS_DIR = srcs/
 SRCS = 	main.c \

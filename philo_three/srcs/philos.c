@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/31 22:43:30 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/08/31 19:56:20 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,7 +48,7 @@ void						*chronos(void *philo_cpy)
 	return (philo);
 }
 
-void 						*philo_life(void *philo_cpy)
+void 						philo_life(t_philosopher *philo_cpy)
 {
 	t_philosopher	*philo;
 	int				time;
@@ -77,7 +77,6 @@ void 						*philo_life(void *philo_cpy)
 			rdeath(philo);
 	}
 	pthread_join(chrono, NULL);
-	return (philo_cpy);
 }
 
 void						rspleep(t_philosopher *philo)
@@ -178,13 +177,18 @@ void						free_all(t_philosopher **philos)
 			already = 1;
 		else
 		{
-			pthread_join(tmp->thread, NULL);
+			waitpid(tmp->process, NULL, 0);
 			free(tmp->num);
 			free(tmp);
 		}
 	}
 	free(nav->num);
 	free(nav);
+	sem_close(g_start);
+	sem_close(g_stop);
+	sem_close(g_time_stamp);
+	sem_close(g_forks);
+	
 }
 
 int							init_threads(t_philosopher **philos)
@@ -196,7 +200,9 @@ int							init_threads(t_philosopher **philos)
 	already = 0;
 	while (!already || (ft_atoi(tmp->num) != 1))
 	{
-		if ((g_error = pthread_create(&(tmp->thread), NULL, philo_life, tmp)))
+		if (!(tmp->process = fork()))
+			philo_life(tmp);
+		if (tmp->process == -1)
 			return (1);
 		if (ft_atoi(tmp->num) == 1)
 			already = 1;
