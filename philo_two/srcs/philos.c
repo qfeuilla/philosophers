@@ -6,72 +6,33 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/31 22:43:30 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/01 11:52:44 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_philosophers.h"
 
-void						*chronos(void *philo_cpy)
-{
-	char			*tmp_s;
-	t_philosopher	*philo;
-	int				i;
-	long int		old;
-
-	philo = (t_philosopher *)philo_cpy;
-	while (1)
-		if (g_start->__align)
-			break;
-	i = g_stop->__align;
-	while (!(i = g_stop->__align))
-	{
-		if (old != (long int)g_time_stamp->__align)
-		{
-			philo->time_to_die -= g_time_stamp->__align - old;
-			if (philo->alive == 0 || (philo->time_to_die < 0))
-			{
-				if (philo->eat_num != 0)
-				{
-					tmp_s = ft_strjoin(ft_itoa(g_time_stamp->__align), " ");
-					tmp_s = ft_strjoin(tmp_s, philo->num);
-					tmp_s = ft_strjoin(tmp_s, " died\n");
-					write(1, tmp_s, ft_strlen(tmp_s));
-					free(tmp_s);
-				}
-				sem_post(g_stop);
-				break ;
-			}
-			old = g_time_stamp->__align;
-		}
-	}
-	return (philo);
-}
-
-void 						*philo_life(void *philo_cpy)
+void				*philo_life(void *philo_cpy)
 {
 	t_philosopher	*philo;
 	int				time;
 	pthread_t		chrono;
-	
-	g_start = sem_open(SEM_START, 0);
-	g_time_stamp = sem_open(SEM_TIMESTAMP, 0);
-	g_stop = sem_open(SEM_STOP, 0);
+
 	philo = (t_philosopher *)philo_cpy;
-	pthread_create(&chrono, NULL, chronos, philo);
+	init_life(&chrono, philo);
 	while (1)
 		if (g_start->__align)
-			break;
+			break ;
 	while (philo->alive && !g_stop->__align)
 	{
-		time = g_time_stamp->__align;
-		if ((philo->actual_action == 1 || philo->actual_action == 0) && !g_stop->__align)
+		time = g_tmp_st->__align;
+		if ((philo->act_ac == 1 || philo->act_ac == 0) && !g_stop->__align)
 			reat(philo);
-		if (philo->actual_action == 2 && time >= philo->next_step && !g_stop->__align)
+		if (philo->act_ac == 2 && time >= philo->next_step && !g_stop->__align)
 			rspleep(philo);
-		if (philo->actual_action == 3 && time >= philo->next_step && !g_stop->__align)
+		if (philo->act_ac == 3 && time >= philo->next_step && !g_stop->__align)
 			rthink(philo);
-		if ((philo->actual_action == 1 || philo->actual_action == 0) && !g_stop->__align)
+		if ((philo->act_ac == 1 || philo->act_ac == 0) && !g_stop->__align)
 			reat(philo);
 		if (!g_stop->__align)
 			rdeath(philo);
@@ -80,12 +41,12 @@ void 						*philo_life(void *philo_cpy)
 	return (philo_cpy);
 }
 
-void						rspleep(t_philosopher *philo)
+void				rspleep(t_philosopher *philo)
 {
 	char	*tmp_s;
 	int		time;
 
-	time = g_time_stamp->__align;
+	time = g_tmp_st->__align;
 	if (g_phi_number > 1)
 	{
 		sem_post(g_forks);
@@ -96,7 +57,7 @@ void						rspleep(t_philosopher *philo)
 	tmp_s = ft_strjoin(tmp_s, " is sleeping\n");
 	write(1, tmp_s, ft_strlen(tmp_s));
 	free(tmp_s);
-	philo->actual_action = 3;
+	philo->act_ac = 3;
 	if (philo->eat_num > 0)
 		philo->eat_num--;
 	if (philo->eat_num == 0)
@@ -104,64 +65,15 @@ void						rspleep(t_philosopher *philo)
 	philo->next_step = time + g_time_to_sleep - (time - philo->next_step);
 }
 
-void						rthink(t_philosopher *philo)
+void				close_sems(void)
 {
-	char	*tmp_s;
-
-	tmp_s = ft_strjoin(ft_itoa(philo->next_step), " ");
-	tmp_s = ft_strjoin(tmp_s, philo->num);
-	tmp_s = ft_strjoin(tmp_s, " is thinking\n");
-	write(1, tmp_s, ft_strlen(tmp_s));
-	free(tmp_s);
-	philo->actual_action = 1;
+	sem_close(g_start);
+	sem_close(g_stop);
+	sem_close(g_tmp_st);
+	sem_close(g_forks);
 }
 
-void						reat(t_philosopher *philo)
-{
-	char	*tmp_s;
-	int		time;
-	
-	if ((g_phi_number == 1 || g_forks->__align >= 2) && philo->eat_num != 0)
-	{
-		if (g_phi_number > 1)
-			sem_wait(g_forks);
-		if (!g_stop->__align)
-		{
-			tmp_s = ft_strjoin(ft_itoa(g_time_stamp->__align), " ");
-			tmp_s = ft_strjoin(tmp_s, philo->num);
-			tmp_s = ft_strjoin(tmp_s, " has taken a fork\n");
-			write(1, tmp_s, ft_strlen(tmp_s));
-			free(tmp_s);
-			if (g_phi_number > 1)
-				sem_wait(g_forks);
-			if (!g_stop->__align)
-			{
-				tmp_s = ft_strjoin(ft_itoa(g_time_stamp->__align), " ");
-				tmp_s = ft_strjoin(tmp_s, philo->num);
-				tmp_s = ft_strjoin(tmp_s, " has taken a fork\n");
-				write(1, tmp_s, ft_strlen(tmp_s));
-				free(tmp_s);
-				philo->time_to_die = g_time_to_die;
-				time = g_time_stamp->__align;
-				tmp_s = ft_strjoin(ft_itoa(time), " ");
-				tmp_s = ft_strjoin(tmp_s, philo->num);
-				tmp_s = ft_strjoin(tmp_s, " is eating\n");
-				write(1, tmp_s, ft_strlen(tmp_s));
-				free(tmp_s);
-				philo->actual_action = 2;
-				philo->next_step = time + g_time_to_eat;
-			}
-		}
-	}
-}
-
-void						rdeath(t_philosopher *philo)
-{
-	if (philo->time_to_die == 0)
-		philo->alive = 0;
-}
-
-void						free_all(t_philosopher **philos)
+void				free_all(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
 	t_philosopher	*nav;
@@ -185,9 +97,10 @@ void						free_all(t_philosopher **philos)
 	}
 	free(nav->num);
 	free(nav);
+	close_sems();
 }
 
-int							init_threads(t_philosopher **philos)
+int					init_threads(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
 	int				already;

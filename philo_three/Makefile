@@ -6,7 +6,7 @@
 #    By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/30 19:27:07 by qfeuilla          #+#    #+#              #
-#    Updated: 2020/08/31 11:41:35 by qfeuilla         ###   ########.fr        #
+#    Updated: 2020/09/01 11:15:40 by qfeuilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -15,7 +15,11 @@ NAME = philo_three
 SRCS_DIR = srcs/
 SRCS = 	main.c \
 		philos.c \
-		utils.c
+		utils.c \
+		ft_itoa.c \
+		init.c \
+		philo_actions.c \
+		philo_timing.c
 
 FLAGS = -Wall -Werror -Wextra
 

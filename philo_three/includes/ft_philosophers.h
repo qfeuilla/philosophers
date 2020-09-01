@@ -6,12 +6,12 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/31 19:42:36 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/01 11:14:51 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef FT_PHILOSOPHER_H
-# define FT_PHILOSOPHER_H
+#ifndef FT_PHILOSOPHERS_H
+# define FT_PHILOSOPHERS_H
 
 # include <pthread.h>
 # include <sys/time.h>
@@ -33,9 +33,9 @@ typedef struct				s_philosopher
 {
 	int						time_to_die;
 	int						eat_num;
-	char 					*num;
+	char					*num;
 	int						alive;
-	int						actual_action;
+	int						act_ac;
 	int						next_step;
 
 	pid_t					process;
@@ -49,14 +49,16 @@ int							ft_strlen(char const *s);
 char						*ft_strjoin(char const *s1, char const *s2);
 char						*ft_itoa(int n);
 int							ft_atoi(const char *str);
-void 						philo_life(t_philosopher *philo_cpy);
+void						philo_life(t_philosopher *philo_cpy);
 void						rspleep(t_philosopher *philo);
 void						rthink(t_philosopher *philo);
 void						reat(t_philosopher *philo);
 void						rdeath(t_philosopher *philo);
 void						free_all(t_philosopher **phi);
 int							init_threads(t_philosopher **philos);
-
+t_philosopher				*init_phis(char **av, int ac);
+void						*chronos(void *philo_cpy);
+void						init_life(pthread_t *ch, t_philosopher *philo);
 
 int							g_time_to_die;
 int							g_time_to_sleep;
@@ -66,6 +68,6 @@ int							g_phi_number;
 sem_t						*g_start;
 sem_t						*g_stop;
 sem_t						*g_forks;
-sem_t						*g_time_stamp;
+sem_t						*g_tmp_st;
 
 #endif

@@ -6,21 +6,22 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:45:55 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/31 11:34:27 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/01 11:12:44 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
+#ifndef PHILO_ERRORS_H
+# define PHILO_ERRORS_H
 # include <errno.h>
 
-#define MS_EAGAIN "The system lacked the necessary resources to create \n\
-				another thread, or the system-imposed limit on the total \n \
-				number of threads in a process PTHREAD_THREADS_MAX would \n \
-				be exceeded.\n"
+# define MS_EAGAIN "Not enougth ressources to create another thread\n"
 
-#define MS_EFAULT "Thread or attr is an invalid pointer.\n"
+# define MS_EFAULT "Thread or attr is an invalid pointer.\n"
 
-#define MS_EINVAL "Attr is not an initialized thread attribute object.\n"
+# define MS_EINVAL "Attr is not an initialized thread attribute object.\n"
 
-#define MS_ARG "Too few arguments for input\n"
+# define MS_ARG "Too few arguments for input\n"
 
-#define MS_PROCESS "Unknown error when creating process"
+# define MS_PROCESS "Unknown error when creating process"
+
+#endif

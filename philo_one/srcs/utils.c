@@ -6,13 +6,13 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:00:40 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/08/28 14:31:16 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/01 00:58:46 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_philosophers.h"
 
-int		ft_strlen(const char *str)
+int			ft_strlen(const char *str)
 {
 	int	i;
 
@@ -22,7 +22,7 @@ int		ft_strlen(const char *str)
 	return (i);
 }
 
-void	*ft_memmove(void *dst, const void *src, size_t n)
+void		*ft_memmove(void *dst, const void *src, size_t n)
 {
 	char		*destptr;
 	const char	*srcptr;
@@ -46,7 +46,7 @@ void	*ft_memmove(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-char	*ft_strjoin(char const *s1, char const *s2)
+char		*ft_strjoin(char const *s1, char const *s2)
 {
 	char			*strj;
 	unsigned int	len1;
@@ -65,57 +65,7 @@ char	*ft_strjoin(char const *s1, char const *s2)
 	return (strj);
 }
 
-static int	countchar(int n)
-{
-	int				count;
-	unsigned int	nb;
-
-	count = 1;
-	if (n < 0)
-	{
-		count++;
-		nb = (unsigned int)-n;
-	}
-	else
-		nb = (unsigned int)n;
-	while (nb / 10 > 0)
-	{
-		nb /= 10;
-		count++;
-	}
-	return (count);
-}
-
-char	*ft_itoa(int n)
-{
-	int				i;
-	char			*tab;
-	unsigned int	nb;
-
-	i = countchar(n);
-	if (!(tab = malloc(sizeof(char) * (i + 1))))
-		return (NULL);
-	if (n < 0)
-	{
-		nb = (unsigned int)-n;
-		tab[0] = '-';
-	}
-	else
-		nb = (unsigned int)n;
-	tab[i] = '\0';
-	i--;
-	while (i >= 0)
-	{
-		tab[i] = nb % 10 + 48;
-		nb = nb / 10;
-		if (nb == 0)
-			break ;
-		i--;
-	}
-	return (tab);
-}
-
-int		ft_atoi(const char *str)
+int			ft_atoi(const char *str)
 {
 	int i;
 	int sign;
