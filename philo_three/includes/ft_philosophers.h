@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:14:51 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:15:38 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,9 @@ typedef struct				s_philosopher
 	int						alive;
 	int						act_ac;
 	int						next_step;
+	char					*ms_eat;
+	char					*ms_think;
+	char					*ms_sleep;
 
 	pid_t					process;
 
@@ -52,7 +55,7 @@ int							ft_atoi(const char *str);
 void						philo_life(t_philosopher *philo_cpy);
 void						rspleep(t_philosopher *philo);
 void						rthink(t_philosopher *philo);
-void						reat(t_philosopher *philo);
+int							reat(t_philosopher *philo);
 void						rdeath(t_philosopher *philo);
 void						free_all(t_philosopher **phi);
 int							init_threads(t_philosopher **philos);
@@ -63,11 +66,14 @@ void						init_life(pthread_t *ch, t_philosopher *philo);
 int							g_time_to_die;
 int							g_time_to_sleep;
 int							g_time_to_eat;
+int							g_eat_num;
 int							g_error;
 int							g_phi_number;
 sem_t						*g_start;
 sem_t						*g_stop;
 sem_t						*g_forks;
 sem_t						*g_tmp_st;
+sem_t						*g_philo_full;
+sem_t						*g_philo_turn;
 
 #endif

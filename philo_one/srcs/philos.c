@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:53:19 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:42:40 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,8 @@ void						*philo_life(void *philo_cpy)
 			rspleep(philo);
 		if (philo->actual_action == 3 && time >= philo->next_step && !g_stop)
 			rthink(philo);
-		if ((philo->actual_action == 1 || philo->actual_action == 0) && !g_stop)
-			reat(philo);
 		if (!g_stop)
-			if (philo->time_to_die == 0)
+			if ((philo->time_to_die == 0 && !reat(philo)) || g_philo_full == g_phi_number)
 				philo->alive = 0;
 	}
 	return (philo_cpy);

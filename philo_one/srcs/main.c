@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:53:26 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/01 13:54:31 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -89,6 +89,8 @@ int				main(int ac, char **av)
 	g_stop = 0;
 	g_tmp_st = 0;
 	g_error = 0;
+	g_eat_num = -1;
+	g_philo_full = 0;
 	philos = init_phis(av, ac);
 	if (philos)
 	{

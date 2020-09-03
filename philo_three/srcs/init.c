@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 01:09:45 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 12:07:36 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/02 16:49:39 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,29 +48,23 @@ void			create_sem(void)
 	g_stop = sem_open(SEM_STOP, O_CREAT, 0644, 0);
 	g_tmp_st = sem_open(SEM_TIMESTAMP, O_CREAT, 0644, 0);
 	g_start = sem_open(SEM_START, O_CREAT, 0664, 0);
+	g_philo_full = sem_open(SEM_FULL, O_CREAT, 0664, 0);
+	g_philo_turn = sem_open(SEM_TURN, O_CREAT, 0664, 1);
 }
 
 t_philosopher	*init_util(int ac, char **av, int i)
 {
-	int				bool;
 	t_philosopher	*phis;
 	t_philosopher	*tmp;
 
-	bool = 0;
-	if (ac == g_phi_number + 5 && one_is_zero(av, 0))
+	if (ac == 6)
+		g_eat_num = ft_atoi(av[5]);
+	if (g_eat_num == 0)
 		return (NULL);
-	if (ac == g_phi_number + 5)
-		bool = 1;
-	if (bool)
-		phis = creat_philo(NULL, i, ft_atoi(av[i + 5]));
-	else
-		phis = creat_philo(NULL, i, -1);
+	phis = creat_philo(NULL, i, g_eat_num);
 	tmp = phis;
 	while (++i < g_phi_number)
-		if (bool)
-			tmp = creat_philo(tmp, i, ft_atoi(av[i + 5]));
-		else
-			tmp = creat_philo(tmp, i, -1);
+		tmp = creat_philo(tmp, i, g_eat_num);
 	tmp->next = phis;
 	phis->prev = tmp;
 	create_sem();

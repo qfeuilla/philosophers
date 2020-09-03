@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 11:13:55 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:14:30 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:34:27 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,20 +26,18 @@ void						put_die(t_philosopher *philo)
 void						*chronos(void *philo_cpy)
 {
 	t_philosopher	*philo;
-	int				i;
 	long int		old;
 
 	philo = (t_philosopher *)philo_cpy;
 	while (1)
 		if (g_start->__align)
 			break ;
-	i = g_stop->__align;
 	old = 0;
-	while (!(i = g_stop->__align))
+	while (!g_stop->__align)
 		if (old != (long int)g_tmp_st->__align && (long int)g_tmp_st->__align)
 		{
 			philo->time_to_die -= g_tmp_st->__align - old;
-			if (philo->alive == 0 || (philo->time_to_die < 0))
+			if (philo->alive == 0)
 			{
 				if (philo->eat_num != 0)
 					put_die(philo);
@@ -56,5 +54,7 @@ void						init_life(pthread_t *ch, t_philosopher *philo)
 	g_start = sem_open(SEM_START, 0);
 	g_tmp_st = sem_open(SEM_TIMESTAMP, 0);
 	g_stop = sem_open(SEM_STOP, 0);
+	g_philo_full = sem_open(SEM_FULL, 0);
+	g_philo_turn = sem_open(SEM_TURN, 0);
 	pthread_create(ch, NULL, chronos, philo);
 }

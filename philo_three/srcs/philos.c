@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:52:56 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:21:06 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,8 +32,6 @@ void						philo_life(t_philosopher *philo_cpy)
 			rspleep(philo);
 		if (philo->act_ac == 3 && time >= philo->next_step && !g_stop->__align)
 			rthink(philo);
-		if ((philo->act_ac == 1 || philo->act_ac == 0) && !g_stop->__align)
-			reat(philo);
 		if (!g_stop->__align)
 			rdeath(philo);
 	}
@@ -57,10 +55,10 @@ void						rspleep(t_philosopher *philo)
 	write(1, tmp_s, ft_strlen(tmp_s));
 	free(tmp_s);
 	philo->act_ac = 3;
-	if (philo->eat_num > 0)
+	if (philo->eat_num >= 0)
 		philo->eat_num--;
 	if (philo->eat_num == 0)
-		philo->alive = 0;
+		sem_post(g_philo_full);
 	philo->next_step = time + g_time_to_sleep - (time - philo->next_step);
 }
 
@@ -70,6 +68,8 @@ void						close_sems(void)
 	sem_close(g_stop);
 	sem_close(g_tmp_st);
 	sem_close(g_forks);
+	sem_close(g_philo_full);
+	sem_close(g_philo_turn);
 }
 
 void						free_all(t_philosopher **philos)

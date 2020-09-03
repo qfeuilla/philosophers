@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 11:03:46 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:51:45 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:40:57 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,10 +27,10 @@ void						rspleep(t_philosopher *philo)
 	write(1, tmp_s, ft_strlen(tmp_s));
 	free(tmp_s);
 	philo->actual_action = 3;
-	if (philo->eat_num > 0)
+	if (philo->eat_num >= 0)
 		philo->eat_num--;
 	if (philo->eat_num == 0)
-		philo->alive = 0;
+		g_philo_full += 1;
 	philo->next_step = time + g_time_to_sleep - (time - philo->next_step);
 }
 
@@ -57,13 +57,12 @@ void						write_ms_fork(t_philosopher *philo)
 	free(tmp_s);
 }
 
-void						reat(t_philosopher *philo)
+int							reat(t_philosopher *philo)
 {
 	char	*tmp_s;
 	int		time;
 
-	if ((g_phi_number == 1 || (philo->prev && !(philo->prev->mutex_is_lock)))
-		&& philo->eat_num != 0)
+	if ((g_phi_number == 1 || (philo->prev && !(philo->prev->mutex_is_lock))))
 	{
 		philo->mutex_is_lock = 1;
 		if (g_phi_number > 1)
@@ -79,5 +78,7 @@ void						reat(t_philosopher *philo)
 		free(tmp_s);
 		philo->actual_action = 2;
 		philo->next_step = time + g_time_to_eat;
+		return(1);
 	}
+	return (0);
 }

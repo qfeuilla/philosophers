@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 11:03:46 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:52:05 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/03 11:29:34 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,34 +46,41 @@ void						write_ms_eat(t_philosopher *philo, int time)
 	free(tmp_s);
 }
 
-void						reat(t_philosopher *philo)
+int						reat(t_philosopher *philo)
 {
 	int		time;
 
-	if ((g_phi_number == 1 || g_forks->__align >= 2) && philo->eat_num != 0)
+	if ((g_phi_number == 1 || (g_forks->__align >= 2 && g_philo_turn->__align == ft_atoi(philo->num))))
 	{
+		if (g_philo_turn->__align == g_phi_number) {
+			g_philo_turn->__align = 1;
+		}
+		else
+			sem_post(g_philo_turn);
+		if (!philo->eat_num)
+			return (0);
 		if (g_phi_number > 1)
+		{
 			sem_wait(g_forks);
+			sem_wait(g_forks);
+		}
 		if (!g_stop->__align)
 		{
 			write_ms_fork(philo);
-			if (g_phi_number > 1)
-				sem_wait(g_forks);
-			if (!g_stop->__align)
-			{
-				write_ms_fork(philo);
-				philo->time_to_die = g_time_to_die;
-				time = g_tmp_st->__align;
-				write_ms_eat(philo, time);
-				philo->act_ac = 2;
-				philo->next_step = time + g_time_to_eat;
-			}
+			write_ms_fork(philo);
+			philo->time_to_die = g_time_to_die;
+			time = g_tmp_st->__align;
+			write_ms_eat(philo, time);
+			philo->act_ac = 2;
+			philo->next_step = time + g_time_to_eat;
 		}
+		return(1);
 	}
+	return (0);
 }
 
 void						rdeath(t_philosopher *philo)
 {
-	if (philo->time_to_die == 0)
+	if ((philo->time_to_die <= 0 && !(reat(philo))) || g_philo_full->__align == g_phi_number)
 		philo->alive = 0;
 }

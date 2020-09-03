@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 11:07:03 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/02 17:01:25 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,8 +57,11 @@ int				main(int ac, char **av)
 	sem_unlink(SEM_STOP);
 	sem_unlink(SEM_TIMESTAMP);
 	sem_unlink(SEM_START);
+	sem_unlink(SEM_FULL);
+	sem_unlink(SEM_TURN);
 	g_tmp_st = 0;
 	g_error = 0;
+	g_eat_num = -1;
 	philos = init_phis(av, ac);
 	if (philos)
 	{
