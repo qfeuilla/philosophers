@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:00:40 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 17:13:01 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 19:21:26 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,6 +95,8 @@ void		display_msg(t_philosopher *philo, int time, char *msg)
 	tmp_s = ft_strjoin(ft_itoa(time), " ");
 	tmp_s = ft_strjoin(tmp_s, philo->num);
 	tmp_s = ft_strjoin(tmp_s, msg);
+	pthread_mutex_lock(&g_write);
 	write(1, tmp_s, ft_strlen(tmp_s));
+	pthread_mutex_unlock(&g_write);
 	free(tmp_s);
 }

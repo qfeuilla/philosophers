@@ -5,8 +5,8 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/31 16:00:38 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/02 17:44:23 by qfeuilla         ###   ########.fr       */
+/*   Created: 2020/09/04 17:48:27 by qfeuilla          #+#    #+#             */
+/*   Updated: 2020/09/04 19:50:40 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,12 @@
 
 # define SEM_STOP "/semstop"
 
-# define SEM_START "/semstart"
-
-# define SEM_TIMESTAMP "/semtimestamp"
-
 # define SEM_FULL "/semfull"
 
-# define SEM_TURN "/semturn"
+# define SEM_FORKS "/semforks"
+
+# define SEM_LOCK "/semlock"
+
+# define SEM_WRITE "/semwrite"
 
 #endif

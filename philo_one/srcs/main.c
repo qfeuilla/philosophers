@@ -6,17 +6,11 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 17:10:14 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 19:25:14 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_philosophers.h"
-
-/*
-** change the time to scale 1:TIMESCALE
-*/
-
-#define TIMESCALE 1
 
 int				timediff(struct timeval t1, struct timeval t2)
 {
@@ -72,6 +66,7 @@ int				main(int ac, char **av)
 	g_eat_num = -1;
 	g_philo_full = 0;
 	g_time_start = 0;
+	pthread_mutex_init(&g_write, NULL);
 	philos = init_phis(av, ac);
 	if (!(g_forks = init_mutexs()))
 		free_all(&philos);

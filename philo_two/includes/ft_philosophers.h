@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/02 17:44:53 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 20:26:37 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@
 # include <semaphore.h>
 # include <fcntl.h>
 # include "philo_errors.h"
+# include "messages.h"
 # include "semaphores.h"
 # ifndef DEBUG
 #  define DEBUG 0
@@ -28,34 +29,40 @@
 
 typedef struct				s_philosopher
 {
-	int						time_to_die;
+	long int				dead_limit;
 	int						eat_num;
 	char					*num;
+	char					*lock_name;
+	char					*full_name;
 	int						alive;
-	int						act_ac;
-	int						next_step;
-
-	pthread_t				thread;
+	int						stop;
+	int						step;
 
 	struct s_philosopher	*next;
-	struct s_philosopher	*prev;
 
+	sem_t					*lock;
+	sem_t					*full;
+
+	pthread_t				thread;
 }							t_philosopher;
 
 int							ft_strlen(char const *s);
-char						*ft_strjoin(char const *s1, char const *s2);
+char						*ft_strjoin(char const *s1, char const *s2,
+										int fre);
 char						*ft_itoa(int n);
 int							ft_atoi(const char *str);
 void						*philo_life(void *philo_cpy);
-void						rspleep(t_philosopher *philo);
-void						rthink(t_philosopher *philo);
-int							reat(t_philosopher *philo);
-void						rdeath(t_philosopher *philo);
+void						rspleep(t_philosopher *philo, long int time);
+void						reat(t_philosopher *philo, long int time);
 void						free_all(t_philosopher **phi);
 int							init_threads(t_philosopher **philos);
 t_philosopher				*init_phis(char **av, int ac);
-void						*chronos(void *philo_cpy);
-void						init_life(pthread_t *ch, t_philosopher *philo);
+long int					get_time();
+long int					get_time_rel();
+void						display_msg(t_philosopher *philo, int time,
+								char *msg);
+sem_t						*ft_sem_open(char const *name, int value);
+char						*make_name(char const *base, int position);
 
 int							g_time_to_die;
 int							g_time_to_sleep;
@@ -63,11 +70,9 @@ int							g_time_to_eat;
 int							g_eat_num;
 int							g_error;
 int							g_phi_number;
-sem_t						*g_start;
 sem_t						*g_stop;
+long int					g_time_start;
 sem_t						*g_forks;
-sem_t						*g_tmp_st;
-sem_t						*g_philo_full;
-sem_t						*g_philo_turn;
+sem_t						*g_write;
 
 #endif

@@ -6,19 +6,11 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 17:10:37 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 19:47:00 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_philosophers.h"
-
-void				take_forks(t_philosopher *philo)
-{
-	pthread_mutex_lock(&g_forks[philo->fork_l]);
-	display_msg(philo, get_time_rel(), MS_FORK);
-	pthread_mutex_lock(&g_forks[philo->fork_r]);
-	display_msg(philo, get_time_rel(), MS_FORK);
-}
 
 void				*monitor_death(void *philo_cpy)
 {
@@ -68,6 +60,14 @@ void				*philo_life(void *philo_cpy)
 	return (philo_cpy);
 }
 
+void				*close_globals(void)
+{
+	pthread_mutex_lock(&g_write);
+	pthread_mutex_destroy(&g_write);
+	pthread_mutex_destroy(g_forks);
+	return (NULL);
+}
+
 void				free_all(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
@@ -94,7 +94,7 @@ void				free_all(t_philosopher **philos)
 	pthread_mutex_destroy(&nav->mutex);
 	free(nav->num);
 	free(nav);
-	*philos = NULL;
+	*philos = close_globals();
 }
 
 int					init_threads(t_philosopher **philos)

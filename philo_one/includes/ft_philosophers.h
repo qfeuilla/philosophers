@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 17:11:55 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 19:46:41 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ long int					get_time();
 long int					get_time_rel();
 void						display_msg(t_philosopher *philo, int time,
 								char *msg);
+void						take_forks(t_philosopher *philo);
 
 int							g_time_to_die;
 int							g_time_to_sleep;
@@ -64,5 +65,6 @@ int							g_stop;
 int							g_philo_full;
 long int					g_time_start;
 pthread_mutex_t				*g_forks;
+pthread_mutex_t				g_write;
 
 #endif

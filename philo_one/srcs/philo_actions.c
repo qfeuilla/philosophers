@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 17:03:36 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 17:09:13 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 19:46:33 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,4 +34,12 @@ void		reat(t_philosopher *philo, long int time)
 	usleep((long)g_time_to_eat * 1000 - ((get_time_rel() - time) + 10));
 	philo->eat_num--;
 	pthread_mutex_unlock(&philo->mutex);
+}
+
+void		take_forks(t_philosopher *philo)
+{
+	pthread_mutex_lock(&g_forks[philo->fork_l]);
+	display_msg(philo, get_time_rel(), MS_FORK);
+	pthread_mutex_lock(&g_forks[philo->fork_r]);
+	display_msg(philo, get_time_rel(), MS_FORK);
 }
