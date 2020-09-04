@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_errors.h                                     :+:      :+:    :+:   */
+/*   messages.h                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/28 13:45:55 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 13:47:37 by qfeuilla         ###   ########.fr       */
+/*   Created: 2020/09/04 14:16:07 by qfeuilla          #+#    #+#             */
+/*   Updated: 2020/09/04 16:59:22 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ERRORS_H
-# define PHILO_ERRORS_H
+#ifndef MESSAGES_H
+# define MESSAGES_H
 
-# include <errno.h>
+# define MS_THINK " is thinking\n"
 
-# define MS_EAGAIN "Not enougth ressources to create another thread\n"
+# define MS_SLEEP " is sleeping\n"
 
-# define MS_EFAULT "Thread or attr is an invalid pointer.\n"
+# define MS_EAT " is eating\n"
 
-# define MS_EINVAL "Attr is not an initialized thread attribute object.\n"
+# define MS_FORK " has taken a fork\n"
 
-# define MS_ARG "Too few arguments for input\n"
-
-# define MS_ALLOCF "Error when trying to allocate forks"
+# define MS_DEAD " died\n"
 
 #endif

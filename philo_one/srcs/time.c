@@ -1,28 +1,26 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   philo_errors.h                                     :+:      :+:    :+:   */
+/*   time.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2020/08/28 13:45:55 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 13:47:37 by qfeuilla         ###   ########.fr       */
+/*   Created: 2020/09/04 17:12:14 by qfeuilla          #+#    #+#             */
+/*   Updated: 2020/09/04 17:12:57 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef PHILO_ERRORS_H
-# define PHILO_ERRORS_H
+#include "../includes/ft_philosophers.h"
 
-# include <errno.h>
+long int	get_time(void)
+{
+	static struct timeval	time;
 
-# define MS_EAGAIN "Not enougth ressources to create another thread\n"
+	gettimeofday(&time, NULL);
+	return ((time.tv_sec * (long int)1000) + (time.tv_usec / 1000));
+}
 
-# define MS_EFAULT "Thread or attr is an invalid pointer.\n"
-
-# define MS_EINVAL "Attr is not an initialized thread attribute object.\n"
-
-# define MS_ARG "Too few arguments for input\n"
-
-# define MS_ALLOCF "Error when trying to allocate forks"
-
-#endif
+long int	get_time_rel(void)
+{
+	return (get_time() - g_time_start);
+}

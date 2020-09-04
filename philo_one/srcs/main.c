@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 13:54:31 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 17:10:14 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,48 +24,14 @@ int				timediff(struct timeval t1, struct timeval t2)
 			(t1.tv_usec - t2.tv_usec)) / 1000;
 }
 
-void			manage_die(t_philosopher *philo)
-{
-	char	*tmp_s;
-
-	--philo->time_to_die;
-	if (philo->alive == 0)
-	{
-		if (philo->eat_num != 0)
-		{
-			tmp_s = ft_strjoin(ft_itoa(g_tmp_st), " ");
-			tmp_s = ft_strjoin(tmp_s, philo->num);
-			tmp_s = ft_strjoin(tmp_s, " died\n");
-			write(1, tmp_s, ft_strlen(tmp_s));
-			free(tmp_s);
-		}
-		g_stop = 1;
-	}
-}
-
 void			loop(t_philosopher **philos)
 {
-	t_philosopher	*tmp;
-	struct timeval	time1;
-	struct timeval	time2;
+	t_philosopher	*nav;
 
-	if (init_threads(philos))
-		return ;
-	g_start = 1;
+	nav = *philos;
+	init_threads(philos);
 	while (!g_stop)
-	{
-		gettimeofday(&time1, NULL);
-		tmp = (*philos)->next;
-		manage_die(*philos);
-		while (tmp != *philos)
-		{
-			manage_die(tmp);
-			tmp = tmp->next;
-		}
-		gettimeofday(&time2, NULL);
-		usleep(1000 * TIMESCALE - timediff(time1, time2));
-		g_tmp_st++;
-	}
+		;
 }
 
 int				manage_errors(void)
@@ -78,23 +44,41 @@ int				manage_errors(void)
 		write(2, MS_EAGAIN, ft_strlen(MS_EAGAIN));
 	if (g_error == -1)
 		write(2, MS_ARG, ft_strlen(MS_ARG));
+	if (g_error == -2)
+		write(2, MS_ALLOCF, ft_strlen(MS_ALLOCF));
 	return (1);
+}
+
+pthread_mutex_t	*init_mutexs(void)
+{
+	pthread_mutex_t	*forks;
+	int				i;
+
+	i = -1;
+	if (!(forks = (pthread_mutex_t *)malloc(sizeof(pthread_mutex_t)
+			* g_phi_number)))
+		return (NULL);
+	while (++i < g_phi_number)
+		pthread_mutex_init(&(forks[i]), NULL);
+	return (forks);
 }
 
 int				main(int ac, char **av)
 {
 	t_philosopher *philos;
 
-	g_start = 0;
 	g_stop = 0;
-	g_tmp_st = 0;
 	g_error = 0;
 	g_eat_num = -1;
 	g_philo_full = 0;
+	g_time_start = 0;
 	philos = init_phis(av, ac);
+	if (!(g_forks = init_mutexs()))
+		free_all(&philos);
 	if (philos)
 	{
 		loop(&philos);
+		usleep(100000);
 		free_all(&philos);
 	}
 	if (g_error)

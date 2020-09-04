@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 01:09:45 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 13:52:10 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 16:37:29 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,18 @@ t_philosopher	*creat_philo(t_philosopher *prev, int i, int eat_num)
 	if (!(philo = malloc(sizeof(t_philosopher))))
 		return (NULL);
 	philo->eat_num = eat_num;
-	philo->time_to_die = g_time_to_die;
+	philo->dead_limit = g_time_to_die;
 	philo->num = ft_itoa(i + 1);
 	philo->alive = 1;
-	philo->actual_action = 0;
-	philo->next_step = 0;
-	philo->mutex_is_lock = 0;
+	philo->fork_l = i;
 	pthread_mutex_init(&philo->mutex, NULL);
-	philo->prev = prev;
-	philo->next = NULL;
+	if (i == g_phi_number - 1)
+		philo->fork_r = 0;
+	else
+		philo->fork_r = i + 1;
 	if (prev)
 		prev->next = philo;
 	return (philo);
-}
-
-int				one_is_zero(char **av, int i)
-{
-	while (i < g_phi_number)
-	{
-		if (!ft_atoi(av[i + 5]))
-			return (1);
-		i++;
-	}
-	return (0);
 }
 
 t_philosopher	*init_util(int ac, char **av, int i)
@@ -58,7 +47,6 @@ t_philosopher	*init_util(int ac, char **av, int i)
 	while (++i < g_phi_number)
 		tmp = creat_philo(tmp, i, g_eat_num);
 	tmp->next = phis;
-	phis->prev = tmp;
 	return (phis);
 }
 

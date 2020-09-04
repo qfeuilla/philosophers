@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:00:40 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/01 00:58:46 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 17:13:01 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,15 @@ int			ft_atoi(const char *str)
 		i++;
 	}
 	return ((sign >= 0 || sign % 2 == 0) ? (rvalue) : (-rvalue));
+}
+
+void		display_msg(t_philosopher *philo, int time, char *msg)
+{
+	char	*tmp_s;
+
+	tmp_s = ft_strjoin(ft_itoa(time), " ");
+	tmp_s = ft_strjoin(tmp_s, philo->num);
+	tmp_s = ft_strjoin(tmp_s, msg);
+	write(1, tmp_s, ft_strlen(tmp_s));
+	free(tmp_s);
 }
