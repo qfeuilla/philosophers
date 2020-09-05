@@ -6,7 +6,7 @@
 #    By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2020/08/30 19:27:07 by qfeuilla          #+#    #+#              #
-#    Updated: 2020/09/04 18:32:48 by qfeuilla         ###   ########.fr        #
+#    Updated: 2020/09/05 11:30:58 by qfeuilla         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -20,7 +20,8 @@ SRCS = 	main.c \
 		init.c \
 		philo_actions.c \
 		time.c \
-		semaphores.c
+		semaphores.c \
+		monitors.c
 
 FLAGS = -Wall -Werror -Wextra
 

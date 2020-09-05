@@ -6,13 +6,13 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:00:40 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/02 17:18:59 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/04 19:16:31 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_philosophers.h"
 
-int				ft_strlen(const char *str)
+int			ft_strlen(const char *str)
 {
 	int	i;
 
@@ -22,7 +22,7 @@ int				ft_strlen(const char *str)
 	return (i);
 }
 
-void			*ft_memmove(void *dst, const void *src, size_t n)
+void		*ft_memmove(void *dst, const void *src, size_t n)
 {
 	char		*destptr;
 	const char	*srcptr;
@@ -46,7 +46,7 @@ void			*ft_memmove(void *dst, const void *src, size_t n)
 	return (dst);
 }
 
-char			*ft_strjoin(char const *s1, char const *s2)
+char		*ft_strjoin(char const *s1, char const *s2, int fre)
 {
 	char			*strj;
 	unsigned int	len1;
@@ -61,11 +61,17 @@ char			*ft_strjoin(char const *s1, char const *s2)
 	ft_memmove(strj, s1, len1);
 	ft_memmove(strj + len1, s2, len2);
 	strj[len1 + len2] = '\0';
-	free((char *)s1);
+	if (fre)
+	{
+		if (fre == 1)
+			free((char *)s1);
+		else
+			free((char *)s2);
+	}
 	return (strj);
 }
 
-int				ft_atoi(const char *str)
+int			ft_atoi(const char *str)
 {
 	int i;
 	int sign;
@@ -86,4 +92,17 @@ int				ft_atoi(const char *str)
 		i++;
 	}
 	return ((sign >= 0 || sign % 2 == 0) ? (rvalue) : (-rvalue));
+}
+
+void		display_msg(t_philosopher *philo, int time, char *msg)
+{
+	char	*tmp_s;
+
+	tmp_s = ft_strjoin(ft_itoa(time), " ", 1);
+	tmp_s = ft_strjoin(tmp_s, philo->num, 1);
+	tmp_s = ft_strjoin(tmp_s, msg, 1);
+	sem_wait(g_write);
+	write(1, tmp_s, ft_strlen(tmp_s));
+	sem_post(g_write);
+	free(tmp_s);
 }

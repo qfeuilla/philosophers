@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 01:09:45 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/02 16:49:39 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/05 10:00:45 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,37 +19,19 @@ t_philosopher	*creat_philo(t_philosopher *prev, int i, int eat_num)
 	if (!(philo = malloc(sizeof(t_philosopher))))
 		return (NULL);
 	philo->eat_num = eat_num;
-	philo->time_to_die = g_time_to_die;
+	philo->dead_limit = g_time_to_die;
 	philo->num = ft_itoa(i + 1);
 	philo->alive = 1;
-	philo->act_ac = 0;
+	philo->full_name = make_name(SEM_FULL, i + 1);
+	philo->full = ft_sem_open(philo->full_name, 0);
+	philo->lock_name = make_name(SEM_LOCK, i + 1);
+	philo->lock = ft_sem_open(philo->lock_name, 1);
+	philo->stop = 0;
 	philo->next_step = 0;
-	philo->prev = prev;
-	philo->next = NULL;
+	philo->shift = 0;
 	if (prev)
 		prev->next = philo;
 	return (philo);
-}
-
-int				one_is_zero(char **av, int i)
-{
-	while (i < g_phi_number)
-	{
-		if (!ft_atoi(av[i + 5]))
-			return (1);
-		i++;
-	}
-	return (0);
-}
-
-void			create_sem(void)
-{
-	g_forks = sem_open("/forks", O_CREAT, 0664, (long unsigned)g_phi_number);
-	g_stop = sem_open(SEM_STOP, O_CREAT, 0644, 0);
-	g_tmp_st = sem_open(SEM_TIMESTAMP, O_CREAT, 0644, 0);
-	g_start = sem_open(SEM_START, O_CREAT, 0664, 0);
-	g_philo_full = sem_open(SEM_FULL, O_CREAT, 0664, 0);
-	g_philo_turn = sem_open(SEM_TURN, O_CREAT, 0664, 1);
 }
 
 t_philosopher	*init_util(int ac, char **av, int i)
@@ -66,8 +48,6 @@ t_philosopher	*init_util(int ac, char **av, int i)
 	while (++i < g_phi_number)
 		tmp = creat_philo(tmp, i, g_eat_num);
 	tmp->next = phis;
-	phis->prev = tmp;
-	create_sem();
 	return (phis);
 }
 

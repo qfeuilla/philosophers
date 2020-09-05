@@ -6,106 +6,105 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/08/28 13:10:32 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/02 17:21:06 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/05 11:47:05 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../includes/ft_philosophers.h"
 
-void						philo_life(t_philosopher *philo_cpy)
+void				take_forks(t_philosopher *philo)
 {
-	t_philosopher	*philo;
-	int				time;
-	pthread_t		chrono;
-
-	philo = (t_philosopher *)philo_cpy;
-	init_life(&chrono, philo);
-	while (1)
-		if (g_start->__align)
-			break ;
-	while (philo->alive && !g_stop->__align)
+	sem_wait(g_forks);
+	if (!philo->stop)
 	{
-		time = g_tmp_st->__align;
-		if ((philo->act_ac == 1 || philo->act_ac == 0) && !g_stop->__align)
-			reat(philo);
-		if (philo->act_ac == 2 && time >= philo->next_step && !g_stop->__align)
-			rspleep(philo);
-		if (philo->act_ac == 3 && time >= philo->next_step && !g_stop->__align)
-			rthink(philo);
-		if (!g_stop->__align)
-			rdeath(philo);
+		display_msg(philo, get_time_rel(), MS_FORK);
+		sem_wait(g_forks);
+		if (!philo->stop)
+			display_msg(philo, get_time_rel(), MS_FORK);
 	}
-	pthread_join(chrono, NULL);
 }
 
-void						rspleep(t_philosopher *philo)
+void				philo_life(t_philosopher *philo)
 {
-	char	*tmp_s;
-	int		time;
+	pthread_t		monitor;
+	pthread_t		monitor2;
 
-	time = g_tmp_st->__align;
-	if (g_phi_number > 1)
+	if (pthread_create(&monitor, NULL, monitor_death, philo) != 0)
+		exit(1);
+	pthread_detach(monitor);
+	if (pthread_create(&monitor2, NULL, monitor_stop, philo) != 0)
+		exit(1);
+	pthread_detach(monitor2);
+	usleep(ft_atoi(philo->num) * 100);
+	while (!philo->stop)
 	{
-		sem_post(g_forks);
-		sem_post(g_forks);
+		if (!philo->stop)
+			take_forks(philo);
+		if (!philo->stop)
+			reat(philo, get_time_rel());
+		if (!philo->stop)
+			rspleep(philo, get_time_rel());
+		if (!philo->stop)
+			display_msg(philo, get_time_rel(), MS_THINK);
 	}
-	tmp_s = ft_strjoin(ft_itoa(philo->next_step), " ");
-	tmp_s = ft_strjoin(tmp_s, philo->num);
-	tmp_s = ft_strjoin(tmp_s, " is sleeping\n");
-	write(1, tmp_s, ft_strlen(tmp_s));
-	free(tmp_s);
-	philo->act_ac = 3;
-	if (philo->eat_num >= 0)
-		philo->eat_num--;
-	if (philo->eat_num == 0)
-		sem_post(g_philo_full);
-	philo->next_step = time + g_time_to_sleep - (time - philo->next_step);
+	exit(0);
 }
 
-void						close_sems(void)
+void				free_one(t_philosopher *tmp)
 {
-	sem_close(g_start);
-	sem_close(g_stop);
-	sem_close(g_tmp_st);
-	sem_close(g_forks);
-	sem_close(g_philo_full);
-	sem_close(g_philo_turn);
+	sem_wait(tmp->lock);
+	sem_post(tmp->full);
+	sem_close(tmp->lock);
+	sem_close(tmp->full);
+	waitpid(tmp->process, NULL, 0);
+	free(tmp->num);
+	free(tmp->full_name);
+	free(tmp->lock_name);
+	free(tmp);
 }
 
-void						free_all(t_philosopher **philos)
+void				free_all(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
 	t_philosopher	*nav;
 	int				already;
 
 	nav = *philos;
+	already = -1;
+	while (++already < g_phi_number * 2)
+		sem_post(g_forks);
 	already = 0;
 	while (!already || (ft_atoi(nav->num) != 1))
 	{
-		sem_post(g_forks);
 		tmp = nav;
 		nav = nav->next;
 		if (ft_atoi(tmp->num) == 1)
 			already = 1;
 		else
-		{
-			waitpid(tmp->process, NULL, 0);
-			free(tmp->num);
-			free(tmp);
-		}
+			free_one(tmp);
 	}
-	free(nav->num);
-	free(nav);
-	close_sems();
+	free_one(nav);
+	*philos = NULL;
+	sem_close(g_forks);
+	sem_close(g_stop);
 }
 
-int							init_threads(t_philosopher **philos)
+int					init_threads(t_philosopher **philos)
 {
 	t_philosopher	*tmp;
 	int				already;
+	pthread_t		monitor;
 
 	tmp = *philos;
 	already = 0;
+	if (g_eat_num > 0)
+	{
+		if (pthread_create(&monitor, NULL, monitor_eat, *philos) != 0)
+			return (1);
+		pthread_detach(monitor);
+	}
+	usleep(10000);
+	g_time_start = get_time_rel();
 	while (!already || (ft_atoi(tmp->num) != 1))
 	{
 		if (!(tmp->process = fork()))

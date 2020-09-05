@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/05 09:59:54 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/05 11:30:25 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,6 +64,9 @@ void						display_msg(t_philosopher *philo, int time,
 								char *msg);
 sem_t						*ft_sem_open(char const *name, int value);
 char						*make_name(char const *base, int position);
+void						*monitor_eat(void *philo_cpy);
+void						*monitor_death(void *philo_cpy);
+void						*monitor_stop(void *philo_cpy);
 
 int							g_time_to_die;
 int							g_time_to_sleep;
