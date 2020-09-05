@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 12:03:02 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 20:20:32 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/03 16:32:32 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,9 +20,6 @@ int				timediff(struct timeval t1, struct timeval t2)
 
 void			loop(t_philosopher **philos)
 {
-	t_philosopher	*nav;
-
-	nav = *philos;
 	init_threads(philos);
 	sem_wait(g_stop);
 	sem_post(g_stop);

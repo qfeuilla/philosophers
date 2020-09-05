@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/04 17:03:36 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 20:07:30 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/05 10:08:35 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,8 @@ void		rspleep(t_philosopher *philo, long int time)
 		sem_post(philo->full);
 	}
 	display_msg(philo, get_time_rel(), MS_SLEEP);
-	usleep((long)g_time_to_sleep * 1000 - ((get_time_rel() - time)) * 1000);
+	philo->shift = get_time_rel() - philo->next_step;
+	usleep((long)g_time_to_sleep * 1000 - ((get_time_rel() - time) + philo->shift) * 1000);
 }
 
 void		reat(t_philosopher *philo, long int time)
@@ -30,6 +31,7 @@ void		reat(t_philosopher *philo, long int time)
 	sem_wait(philo->lock);
 	time = get_time_rel();
 	philo->dead_limit = time + g_time_to_die;
+	philo->next_step = time + g_time_to_eat;
 	display_msg(philo, time, MS_EAT);
 	usleep((long)g_time_to_eat * 1000 - ((get_time_rel() - time)) * 1000);
 	philo->eat_num--;

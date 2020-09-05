@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2019/12/04 10:30:31 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 20:26:37 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/05 09:59:54 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,7 +36,8 @@ typedef struct				s_philosopher
 	char					*full_name;
 	int						alive;
 	int						stop;
-	int						step;
+	int						next_step;
+	int						shift;
 
 	struct s_philosopher	*next;
 

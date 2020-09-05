@@ -6,7 +6,7 @@
 /*   By: qfeuilla <qfeuilla@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2020/09/01 01:09:45 by qfeuilla          #+#    #+#             */
-/*   Updated: 2020/09/04 20:21:21 by qfeuilla         ###   ########.fr       */
+/*   Updated: 2020/09/05 10:00:45 by qfeuilla         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,8 @@ t_philosopher	*creat_philo(t_philosopher *prev, int i, int eat_num)
 	philo->lock_name = make_name(SEM_LOCK, i + 1);
 	philo->lock = ft_sem_open(philo->lock_name, 1);
 	philo->stop = 0;
-	philo->step = 0;
+	philo->next_step = 0;
+	philo->shift = 0;
 	if (prev)
 		prev->next = philo;
 	return (philo);
